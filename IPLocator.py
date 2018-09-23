@@ -13,13 +13,13 @@ print(header)
 
 #get ip-api url
 #sauce = urllib.request.urlopen('http://ip-api.com/xml/'ip).read()
-sauce = urllib.request.urlopen('http://ip-api.com/xml/24.35.138.104').read()
+sauce = urllib.request.urlopen('http://ip-api.com/xml/8.8.8.8').read()
 
 #create BeautifulSoup object
 soup = bs.BeautifulSoup(sauce, 'xml')
 
 #print the query result without the xml tags
-print('[!] IP               :  24.35.138.104')
+print('[!] IP               :  8.8.8.8')
 print('[!] Query Status     : ', soup.status.text)
 print('[!] Error Message    : ', soup.message)
 print('------------------------------------')
