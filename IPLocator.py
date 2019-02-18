@@ -13,13 +13,14 @@ print(header)
 
 #get ip-api url
 #sauce = urllib.request.urlopen('http://ip-api.com/xml/'ip).read()
-sauce = urllib.request.urlopen('http://ip-api.com/xml/8.8.8.8').read()
+# sauce = urllib.request.urlopen('http://ip-api.com/xml/69.222.199.70').read()
+sauce = urllib.request.urlopen('http://ip-api.com/xml/'+ip_address).read()
 
 #create BeautifulSoup object
 soup = bs.BeautifulSoup(sauce, 'xml')
 
 #print the query result without the xml tags
-print('[!] IP               :  8.8.8.8')
+print('[!] IP               : ', soup.query.query.text)
 print('[!] Query Status     : ', soup.status.text)
 print('[!] Error Message    : ', soup.message)
 print('------------------------------------')
@@ -33,14 +34,37 @@ print('[+] Timezone         : ', soup.timezone.text)
 print('[+] ISP              : ', soup.isp.text)
 print('[+] Organization     : ', soup.org.text)
 # print('[+] AS Number/Name   : ', soup.as.text)
+print('[+] AS Number/Name   : ', soup.find_all('as'))
 print('[+] https://maps.google.com/maps/place/', soup.status.text)
 
-#Usage: ./iplocator.pl [host] [ip] [domain]
-       # perl iplocator.pl [host] [ip] [domain]
+#Usage: ./iplocator.py [host] [ip] [domain]
+       # python iplocator.py [host] [ip] [domain]
 #
-# Ex:  ./iplocator.pl  www.google.com
-#      ./iplocator.pl  216.58.210.206
+# Ex:  ./iplocator.py  www.google.com
+#      ./iplocator.py  216.58.210.206
 #
 # Usage Limit: The ip-api.com system will automatically ban any IP addresses doing over 150 requests per minute.
 #
 # If your IP was banned, visit http://ip-api.com/docs/unban
+
+# Test snippet
+# def Geolocate(IP):
+#     URL = "http://ip-api.com/json/"+str(IP)
+#     data = str(os.open("curl -s "+URL).read())
+#     obj = json.loads(data)
+#     for item in obj:
+#         print(str(item)+" : "+str(obj[item]))
+
+#pick target/s
+# parser.add_argument('-m', '--my-ip',
+#                     dest='myip',
+#                     action='store_true',
+#                     help='Get Geolocation info for my IP address.')
+#
+# parser.add_argument('-t', '--target',
+#                     help='IP Address or Domain to be analyzed.')
+#
+# parser.add_argument('-T', '--tlist',
+#                     metavar='file',
+#                     type=checkFileRead,
+#                     help='A list of IPs/Domains targets, each target in new line.')
