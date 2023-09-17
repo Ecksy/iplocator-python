@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
-
 import sys
 import socket
 import requests
 
-if len(sys.argv) != 2:
-    print("Usage: python3 iplocator.py [host|ip|domain]")
-    print("\nEx:  python3 iplocator.py www.google.com")
-    print("     python3 iplocator.py 216.58.210.206")
-    sys.exit(1)
+def print_help():
+    print("""
+Usage:
+  python3 iplocator.py [host|ip|domain]
+  python3 iplocator.py -i [input_file]
 
-try:
-    ip = socket.gethostbyname(sys.argv[1])
-except socket.gaierror:
-    print("IP or Host invalid!")
-    sys.exit(1)
+Examples:
+  python3 iplocator.py www.google.com
+  python3 iplocator.py 216.58.210.206
+  python3 iplocator.py -i input.txt
+""")
 
-response = requests.get(f"http://ip-api.com/json/{ip}?fields=33292287")
-info = response.json()
+def get_geolocation(target):
+    try:
+        ip = socket.gethostbyname(target)
+    except socket.gaierror:
+        print(f"IP or Host invalid: {target}")
+        return
 
-print(f"""
-Ip Geolocation Tool  
+    response = requests.get(f"http://ip-api.com/json/{ip}?fields=33292287")
+    info = response.json()
 
+    print(f"""
+--------------------------------------------------
+Target: {target}
 --------------------------------------------------
   [!] IP                       :  {info.get('query')}
   [!] Query Status             :  {info.get('status')}
@@ -46,3 +52,26 @@ Ip Geolocation Tool
   [+] Country Currency         :  {info.get('currency')}
   [+] https://maps.google.com/maps/place/{info.get('lat')}%20{info.get('lon')}
 """)
+
+if len(sys.argv) < 2:
+    print_help()
+    sys.exit(1)
+
+if sys.argv[1] == '-h' or sys.argv[1] == '--help':
+    print_help()
+    sys.exit(0)
+
+if sys.argv[1] == '-i':
+    if len(sys.argv) != 3:
+        print("Invalid number of arguments for -i option")
+        sys.exit(1)
+    
+    input_file = sys.argv[2]
+    try:
+        with open(input_file, 'r') as f:
+            for line in f:
+                get_geolocation(line.strip())
+    except FileNotFoundError:
+        print(f"No such file: {input_file}")
+else:
+    get_geolocation(sys.argv[1])
