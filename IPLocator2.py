@@ -2,6 +2,7 @@
 import sys
 import socket
 import requests
+import time
 
 def print_help():
     print("""
@@ -52,6 +53,7 @@ Target: {target}
   [+] Country Currency         :  {info.get('currency')}
   [+] https://maps.google.com/maps/place/{info.get('lat')}%20{info.get('lon')}
 """)
+    time.sleep(1.5)
 
 if len(sys.argv) < 2:
     print_help()
